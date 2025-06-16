@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=3 uid="uid://dr06pyksdqo64"]
+
+[ext_resource type="Script" uid="uid://cnis41sq5suh1" path="res://scripts/main.gd" id="1_ig7tw"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ig7tw")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+split_offset = 200
+
+[node name="PanelContainer" type="PanelContainer" parent="HSplitContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HSplitContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="LoadGIFButton" type="Button" parent="HSplitContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Load GIF..."
+
+[node name="PanelContainer2" type="PanelContainer" parent="HSplitContainer"]
+layout_mode = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="HSplitContainer/PanelContainer2"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="HSplitContainer/PanelContainer2/CenterContainer"]
+layout_mode = 2
+
+[node name="AnimatedSprite" type="AnimatedSprite2D" parent="HSplitContainer/PanelContainer2/CenterContainer/Control"]
+unique_name_in_owner = true
+
+[node name="FileDialog" type="FileDialog" parent="."]
+unique_name_in_owner = true
+
+[connection signal="pressed" from="HSplitContainer/PanelContainer/MarginContainer/VBoxContainer/LoadGIFButton" to="." method="_on_load_gif_button_pressed"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]

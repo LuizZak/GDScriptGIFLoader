@@ -1,0 +1,30 @@
+class_name GifHeader
+
+var _signature: String
+var _gif_version: String
+var _error: Error
+
+func _init(input_stream: ByteReaderStream):
+    if input_stream.remaining_bytes < 6:
+        _error = Error.ERR_FILE_UNRECOGNIZED
+        return
+
+    _signature = input_stream.read_ascii(3)
+    if _signature != "GIF":
+        _error = Error.ERR_FILE_UNRECOGNIZED
+        return
+
+    _gif_version = input_stream.read_ascii(3)
+
+## Gets any error found during initialization.
+## If no errors were found, returns `Error.OK`.
+func get_error() -> Error:
+    return _error
+
+## Gets the signature of the GIF file. Always `"GIF"` for valid GIF files.
+func get_signature() -> String:
+    return _signature
+
+## Gets the GIF file version signature.
+func get_gif_version() -> String:
+    return _gif_version
