@@ -118,15 +118,17 @@ func _create_image(
     var image_y := id.position().y
     var image_width := id.size().x
     var image_height := id.size().y
+    var is_interlaced := id.is_interlaced()
     var pixel_indices := image_data.get_pixel_indices()
     var num_colors := active_color_table.get_length()
+    var colors := active_color_table.get_color_table()
 
     assert(base_image.get_format() == Image.FORMAT_RGBA8)
-    var raw_image_data = base_image.get_data()
+    var raw_image_data := base_image.get_data()
 
     for i in range(image_height):
         var pixel_row_number := i
-        if id.is_interlaced():
+        if is_interlaced:
             if interlace_row_number >= image_height:
                 _pass += 1
                 match _pass:
@@ -154,7 +156,7 @@ func _create_image(
         if (k + logical_width) < dlim:
             dlim = k + logical_width # Past dest edge
 
-        var sx = i * image_width # Start of line in source
+        var sx := i * image_width # Start of line in source
 
         while dx < dlim:
             var index_in_color_table := pixel_indices[sx]
@@ -164,7 +166,7 @@ func _create_image(
             # index, or if this frame doesn't have a transparent color
             if not has_transparent or index_in_color_table != transparent_color:
                 if index_in_color_table < num_colors:
-                    var color = active_color_table.get_color_int(index_in_color_table)
+                    var color := colors[index_in_color_table]
 
                     raw_image_data[dx * 4] = (color >> 24) & 0xFF
                     raw_image_data[dx * 4 + 1] = (color >> 16) & 0xFF
@@ -177,9 +179,6 @@ func _create_image(
 
     return base_image
 
-func _recurse_graphic_control_extension() -> void:
-    pass
-
 func _get_base_image(
     previous_frame: GifFrame,
     previous_frame_but1: GifFrame,
@@ -187,8 +186,6 @@ func _get_base_image(
     gce: GraphicControlExtension,
     act: ColorTable
 ) -> Image:
-    _recurse_graphic_control_extension()
-
     var previous_disposal_method: GraphicControlExtension.DisposalMethod
 
     if previous_frame == null:
@@ -200,8 +197,8 @@ func _get_base_image(
             previous_disposal_method = GraphicControlExtension.DisposalMethod.RESTORE_TO_BACKGROUND_COLOR
 
     var base_image: Image
-    var width = lsd.screen_size().x
-    var height = lsd.screen_size().y
+    var width := lsd.screen_size().x
+    var height := lsd.screen_size().y
     var background_color_index: int = lsd._background_color_index
     if previous_frame != null:
         background_color_index = previous_frame._logical_screen_descriptor._background_color_index
@@ -220,7 +217,7 @@ func _get_base_image(
     if previous_frame == null or previous_frame._image == null:
         base_image = Image.create_empty(width, height, false, Image.FORMAT_RGBA8)
     else:
-        base_image.set_data(width, height, false, Image.FORMAT_RGBA8, previous_frame.get_image().get_data())
+        base_image = previous_frame.get_image().duplicate()
 
     match previous_disposal_method:
         GraphicControlExtension.DisposalMethod.DO_NOT_DISPOSE:

@@ -28,7 +28,7 @@ var _error: Error
 func _init(input_stream: ByteReaderStream):
     _block_size = input_stream.read_byte()
 
-    var packed = PackedField.new(input_stream.read_byte())
+    var packed := PackedField.new(input_stream.read_byte())
     _disposal_method = packed.get_bits(3, 3) as DisposalMethod
     _expects_user_input = packed.get_bit(6)
     _has_transparent_color = packed.get_bit(7)

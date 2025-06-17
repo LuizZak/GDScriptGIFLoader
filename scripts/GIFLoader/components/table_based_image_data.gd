@@ -38,11 +38,13 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
     prefix.resize(MAX_STACK_SIZE)
     var suffix = PackedByteArray()
     suffix.resize(MAX_STACK_SIZE)
-    var pixel_stack: Array[int] = []
+    var pixel_stack: PackedByteArray = []
+    pixel_stack.resize(pixel_count)
+    var pixel_stack_index := 0
 
     _lzw_minimum_code_size = input_stream.read_byte()
-    var clear_code = get_clear_code()
-    var end_of_information = get_end_of_information()
+    var clear_code := get_clear_code()
+    var end_of_information := get_end_of_information()
     next_available_code = clear_code + 2
     previous_code = NULL_CODE
     current_code_size = get_initial_code_size()
@@ -53,7 +55,6 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
 
     code = 0
     while code < clear_code:
-        prefix[code] = 0
         suffix[code] = code
 
         code += 1
@@ -64,10 +65,11 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
     # first time through the loop with a data block read from the input
     # stream.
     var block = DataBlock.make_empty()
+    var block_data: PackedByteArray = []
 
     pixel_index = 0
     while pixel_index < pixel_count:
-        if pixel_stack.is_empty():
+        if pixel_stack_index == 0:
             # There are no pixels in the stack at the moment so...
 
             if meaningful_bits_in_datum < current_code_size:
@@ -81,6 +83,7 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
 
                     block = DataBlock.new(input_stream)
                     bytes_to_extract = block.get_actual_block_size()
+                    block_data = block.get_data()
 
                     # Point to the first byte in the new data block
                     index_in_data_block = 0
@@ -96,7 +99,7 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
 
                 # Append the contents of the current byte in the data block to the
                 # beginning of the datum
-                var new_datum = block.get_data()[index_in_data_block] << meaningful_bits_in_datum
+                var new_datum := block_data[index_in_data_block] << meaningful_bits_in_datum
                 datum += new_datum
 
                 # So we've now got 8 more bits of information in the datum.
@@ -113,7 +116,7 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
 
             # Get the least significant bits from the read datum, up to the
             # maximum allowed by the current code size.
-            code = datum & get_maximum_possible_code(current_code_size)
+            code = datum & ((1 << current_code_size) - 1) # get_maximum_possible_code(current_code_size)
 
             # Drop the bits we've just extracted from the datum
             datum >>= current_code_size
@@ -136,8 +139,8 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
                 # We can get a clear code at any point in the image data, this
                 # is an instruction to reset the decoder and empty the dictionary
                 # of codes.
-                current_code_size = get_initial_code_size()
-                next_available_code = get_clear_code() + 2
+                current_code_size = _lzw_minimum_code_size + 1 # get_initial_code_size()
+                next_available_code = (1 << _lzw_minimum_code_size) + 2 # get_clear_code() + 2
                 previous_code = NULL_CODE
 
                 # Carry on reading from the input stream
@@ -148,7 +151,8 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
                 # or the most recent clear code.
                 # There's no previously read code in memory yet, so get pixel
                 # index for the current code and add it to the stack.
-                pixel_stack.push_back(suffix[code])
+                pixel_stack[pixel_stack_index] = suffix[code]
+                pixel_stack_index += 1
                 previous_code = code
                 first_code = code
 
@@ -157,16 +161,19 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
 
             in_code = code
             if code == next_available_code:
-                pixel_stack.push_back(first_code)
+                pixel_stack[pixel_stack_index] = first_code
+                pixel_stack_index += 1
                 code = previous_code
 
             while code > clear_code:
-                pixel_stack.push_back(suffix[code])
+                pixel_stack[pixel_stack_index] = suffix[code]
+                pixel_stack_index += 1
                 code = prefix[code]
 
             first_code = (suffix[code]) & 0xFF
 
-            pixel_stack.push_back(first_code)
+            pixel_stack[pixel_stack_index] = first_code
+            pixel_stack_index += 1
 
             # This fix is based off of ImageSharp's LzwDecoder.cs:
             # https://github.com/SixLabors/ImageSharp/blob/8899f23c1ddf8044d4dea7d5055386f684120761/src/ImageSharp/Formats/Gif/LzwDecoder.cs
@@ -178,7 +185,8 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
                 suffix[next_available_code] = first_code & 0xFF
                 next_available_code += 1
 
-                if (next_available_code & get_maximum_possible_code(current_code_size)) == 0:
+                #if (next_available_code & get_maximum_possible_code(current_code_size)) == 0:
+                if (next_available_code & ((1 << current_code_size) - 1)) == 0:
                     # We've reached the largest code possible for this size
                     if next_available_code < MAX_STACK_SIZE:
                         # So increase the code size by 1
@@ -188,7 +196,8 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
 
         # Pop all the pixels currently on the stack off, and add them to the return
         # value
-        _pixel_indices[pixel_index] = pixel_stack.pop_back()
+        pixel_stack_index -= 1
+        _pixel_indices[pixel_index] = pixel_stack[pixel_stack_index]
         pixel_index += 1
 
     if pixel_index < pixel_count:
@@ -232,5 +241,5 @@ func get_end_of_information() -> int:
 ## all bits in the code are set to 1.
 ## This is used as a bitmask to extract the correct number of least
 ## significant bits from the datum to form a code.
-func get_maximum_possible_code(current_code_size: int):
+func get_maximum_possible_code(current_code_size: int) -> int:
     return (1 << current_code_size) - 1

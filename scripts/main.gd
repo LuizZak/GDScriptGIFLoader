@@ -2,11 +2,18 @@ class_name Main
 extends Control
 
 @onready
-var file_dialog: FileDialog = %FileDialog
+var time_to_load_label: Label = %TimeToLoadLabel
 @onready
 var animated_sprite: AnimatedSprite2D = %AnimatedSprite
+@onready
+var file_path_label: Label = %FilePathLabel
+@onready
+var file_dialog: FileDialog = %FileDialog
 
 func _ready() -> void:
+    file_dialog.access = FileDialog.ACCESS_FILESYSTEM
+    file_dialog.current_dir = OS.get_executable_path().get_base_dir()
+    file_dialog.use_native_dialog = true
     file_dialog.filters = ["*.gif;GIF Files;image/gif"]
     file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 
@@ -14,6 +21,8 @@ func _on_load_gif_button_pressed() -> void:
     file_dialog.show()
 
 func _on_file_dialog_file_selected(path: String) -> void:
+    file_path_label.text = path
+
     var file = FileAccess.open(path, FileAccess.READ)
     if file == null:
         return
@@ -28,4 +37,4 @@ func _on_file_dialog_file_selected(path: String) -> void:
 
     var end_time = Time.get_ticks_msec()
 
-    print("%.2fs" % ((end_time - start_time) / 1000.0))
+    time_to_load_label.text = "%.2fs" % ((end_time - start_time) / 1000.0)

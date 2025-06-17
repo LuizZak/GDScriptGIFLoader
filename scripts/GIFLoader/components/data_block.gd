@@ -69,7 +69,7 @@ static func skip_stream(input_stream: ByteReaderStream) -> int:
     if input_stream.is_eof():
         return 0
 
-    var block_size = input_stream.read_byte()
+    var block_size := input_stream.read_byte()
 
     input_stream.advance(block_size)
     return block_size

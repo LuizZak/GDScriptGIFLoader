@@ -36,15 +36,15 @@ func _init(input_stream: ByteReaderStream) -> void:
         _error = Error.ERR_FILE_CORRUPT
         return
 
-    var left_position = input_stream.read_short() # (sub)image position & size
-    var top_position = input_stream.read_short()
-    var width = input_stream.read_short()
-    var height = input_stream.read_short()
+    var left_position := input_stream.read_short() # (sub)image position & size
+    var top_position := input_stream.read_short()
+    var width := input_stream.read_short()
+    var height := input_stream.read_short()
 
     _position = Vector2i(left_position, top_position)
     _size = Vector2i(width, height)
 
-    var packed = PackedField.new(input_stream.read_byte())
+    var packed := PackedField.new(input_stream.read_byte())
     _has_local_color_table = packed.get_bit(0)
     _is_interlaced = packed.get_bit(1)
     _is_sorted = packed.get_bit(2)

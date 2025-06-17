@@ -37,6 +37,18 @@ layout_mode = 2
 layout_mode = 2
 text = "Load GIF..."
 
+[node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HSplitContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Parse Time: "
+
+[node name="TimeToLoadLabel" type="Label" parent="HSplitContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0.0s"
+
 [node name="PanelContainer2" type="PanelContainer" parent="HSplitContainer"]
 layout_mode = 2
 
@@ -49,8 +61,21 @@ layout_mode = 2
 [node name="AnimatedSprite" type="AnimatedSprite2D" parent="HSplitContainer/PanelContainer2/CenterContainer/Control"]
 unique_name_in_owner = true
 
+[node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/PanelContainer2"]
+layout_mode = 2
+size_flags_vertical = 8
+
+[node name="Label" type="Label" parent="HSplitContainer/PanelContainer2/HBoxContainer"]
+layout_mode = 2
+text = "File Path:"
+
+[node name="FilePathLabel" type="Label" parent="HSplitContainer/PanelContainer2/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
 [node name="FileDialog" type="FileDialog" parent="."]
 unique_name_in_owner = true
+initial_position = 1
 
 [connection signal="pressed" from="HSplitContainer/PanelContainer/MarginContainer/VBoxContainer/LoadGIFButton" to="." method="_on_load_gif_button_pressed"]
 [connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]

@@ -39,15 +39,17 @@ func _init(input_stream: ByteReaderStream, number_of_colors: int):
 func get_error() -> Error:
     return _error
 
+## Gets the entire color table stored in this color table.
+func get_color_table() -> PackedInt32Array:
+    return _int_colors
+
 ## Gets the color at a specified index in this color table as a ARGB integer.
 func get_color_int(index: int) -> int:
     return _int_colors[index]
 
 ## Gets the color at a specified index in this color table.
 func get_color(index: int) -> Color:
-    var value = get_color_int(index)
-
-    return Color.hex(value)
+    return Color.hex(get_color_int(index))
 
 ## Gets the length of this color table.
 func get_length() -> int:

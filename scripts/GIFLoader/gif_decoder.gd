@@ -10,12 +10,12 @@ const CODE_IMAGE_SEPARATOR := 0x2C
 const CODE_TRAILER := 0x38
 ## Graphic control label - identifies the current block as a Graphic Control
 ## Extension.
-const CODE_GRAPHIC_CONTROL_LABEL = 0xF9
+const CODE_GRAPHIC_CONTROL_LABEL := 0xF9
 ## Comment lable - identifies the current block as a comment extension.
-const CODE_COMMENT_LABEL = 0xFE
+const CODE_COMMENT_LABEL := 0xFE
 ## Application extension label - identifies the current block as a Application
 ## Extension.
-const CODE_APPLICATION_EXTENSION_LABEL = 0xFF
+const CODE_APPLICATION_EXTENSION_LABEL := 0xFF
 
 var _reader: ByteReaderStream
 var _gif_header: GifHeader
@@ -63,7 +63,7 @@ func get_frames() -> Array[GifFrame]:
 
 ## Gets the frames that were decoded within a SpriteFrames instance.
 func get_sprite_frames() -> SpriteFrames:
-    var sprite_frames = SpriteFrames.new()
+    var sprite_frames := SpriteFrames.new()
 
     var average_delay := 0
     for frame in _frames:
@@ -76,7 +76,7 @@ func get_sprite_frames() -> SpriteFrames:
     sprite_frames.set_animation_speed(&"default", fps)
 
     for frame in _frames:
-        var texture = ImageTexture.create_from_image(frame.get_image())
+        var texture := ImageTexture.create_from_image(frame.get_image())
         sprite_frames.add_frame(&"default", texture, float(frame.get_delay()) / average_delay)
 
     return sprite_frames
@@ -110,7 +110,7 @@ func _read_contents(input_stream: ByteReaderStream) -> void:
                         DataBlock.skip_blocks(input_stream)
 
                     CODE_APPLICATION_EXTENSION_LABEL:
-                        var ext = NetscapeExtension.new(input_stream)
+                        var ext := NetscapeExtension.new(input_stream)
                         _netscape_extension = ext
 
                     _:
