@@ -25,7 +25,7 @@ func _init(
     previous_frame: GifFrame,
     previous_frame_but1: GifFrame,
     index: int
-):
+) -> void:
     _index = index
     _logical_screen_descriptor = logical_screen_descriptor
     _global_color_table = global_color_table
@@ -50,11 +50,11 @@ func get_delay() -> int:
 
 func _decode(input_stream: ByteReaderStream) -> void:
     _extension = _graphic_control_extension
-    var transparent_color_index = _graphic_control_extension.transparent_color_index()
+    var transparent_color_index := _graphic_control_extension.transparent_color_index()
 
-    var image_descriptor = ImageDescriptor.new(input_stream)
+    var image_descriptor := ImageDescriptor.new(input_stream)
 
-    var background_color = Color.from_rgba8(0, 0, 0, 0)
+    var background_color := Color.from_rgba8(0, 0, 0, 0)
 
     var active_color_table: ColorTable
     if image_descriptor.has_local_color_table():
@@ -70,8 +70,8 @@ func _decode(input_stream: ByteReaderStream) -> void:
             background_color = Color.from_rgba8(0, 0, 0, 0)
 
     # Decode pixel data
-    var pixel_count = image_descriptor.size().x * image_descriptor.size().y
-    var tbid = TableBasedImageData.new(input_stream, pixel_count)
+    var pixel_count := image_descriptor.size().x * image_descriptor.size().y
+    var tbid := TableBasedImageData.new(input_stream, pixel_count)
     if tbid.get_pixel_indices().is_empty():
         _error = Error.ERR_FILE_CORRUPT
         return

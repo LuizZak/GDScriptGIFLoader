@@ -126,7 +126,7 @@ func _read_contents(input_stream: ByteReaderStream) -> void:
             _:
                 _error = Error.ERR_FILE_CORRUPT
 
-func _add_frame(input_stream: ByteReaderStream, last_gce: GraphicControlExtension):
+func _add_frame(input_stream: ByteReaderStream, last_gce: GraphicControlExtension) -> void:
     var previous_frame: GifFrame = null
     if not _frames.is_empty():
         previous_frame = _frames[-1]
@@ -137,7 +137,7 @@ func _add_frame(input_stream: ByteReaderStream, last_gce: GraphicControlExtensio
     else:
         _frame_delays.append(0)
 
-    var frame = GifFrame.new(
+    var frame := GifFrame.new(
         input_stream,
         _lsd,
         _gct,

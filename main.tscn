@@ -73,6 +73,24 @@ text = "File Path:"
 unique_name_in_owner = true
 layout_mode = 2
 
+[node name="LoadingPanelContainer" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="LoadingPanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="LoadingPanelContainer/CenterContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Loading..."
+
 [node name="FileDialog" type="FileDialog" parent="."]
 unique_name_in_owner = true
 initial_position = 1

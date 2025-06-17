@@ -15,7 +15,7 @@ var _block_size: int
 var _data: PackedByteArray
 var _error: Error
 
-func _init(input_stream: ByteReaderStream):
+func _init(input_stream: ByteReaderStream) -> void:
     if input_stream.is_eof():
         _error = Error.ERR_FILE_CORRUPT
         return
@@ -60,7 +60,7 @@ func is_too_short() -> bool:
 
 ## Creates an empty data block of size zero.
 static func make_empty() -> DataBlock:
-    var data = PackedByteArray([0])
+    var data := PackedByteArray([0])
     return DataBlock.new(ByteReaderStream.new(data))
 
 ## Skips a data block from the given stream and returns a number that specifies
@@ -76,6 +76,6 @@ static func skip_stream(input_stream: ByteReaderStream) -> int:
 
 # Skips variable length blocks up to and including the next zero length block
 # (block terminator)
-static func skip_blocks(input_stream: ByteReaderStream):
+static func skip_blocks(input_stream: ByteReaderStream) -> void:
     while DataBlock.skip_stream(input_stream) > 0:
         pass

@@ -14,7 +14,7 @@ var _pixel_indices: PackedByteArray = []
 var _lzw_minimum_code_size: int
 var _error: Error
 
-func _init(input_stream: ByteReaderStream, pixel_count: int):
+func _init(input_stream: ByteReaderStream, pixel_count: int) -> void:
     if pixel_count < 1:
         _error = Error.ERR_PARAMETER_RANGE_ERROR
         return
@@ -34,9 +34,9 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
     ## Number oof bytes still to be extracted from the current data block
     var bytes_to_extract := 0
 
-    var prefix = PackedInt32Array()
+    var prefix := PackedInt32Array()
     prefix.resize(MAX_STACK_SIZE)
-    var suffix = PackedByteArray()
+    var suffix := PackedByteArray()
     suffix.resize(MAX_STACK_SIZE)
     var pixel_stack: PackedByteArray = []
     pixel_stack.resize(pixel_count)
@@ -64,7 +64,7 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
     # Initialise block to an empty data block. This will be overwritten
     # first time through the loop with a data block read from the input
     # stream.
-    var block = DataBlock.make_empty()
+    var block := DataBlock.make_empty()
     var block_data: PackedByteArray = []
 
     pixel_index = 0
@@ -99,8 +99,7 @@ func _init(input_stream: ByteReaderStream, pixel_count: int):
 
                 # Append the contents of the current byte in the data block to the
                 # beginning of the datum
-                var new_datum := block_data[index_in_data_block] << meaningful_bits_in_datum
-                datum += new_datum
+                datum += block_data[index_in_data_block] << meaningful_bits_in_datum
 
                 # So we've now got 8 more bits of information in the datum.
                 meaningful_bits_in_datum += 8

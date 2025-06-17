@@ -4,7 +4,7 @@ var _signature: String
 var _gif_version: String
 var _error: Error
 
-func _init(input_stream: ByteReaderStream):
+func _init(input_stream: ByteReaderStream) -> void:
     if input_stream.remaining_bytes < 6:
         _error = Error.ERR_FILE_UNRECOGNIZED
         return

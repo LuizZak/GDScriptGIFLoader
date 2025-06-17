@@ -5,7 +5,7 @@ class_name ColorTable
 var _int_colors: PackedInt32Array
 var _error: Error
 
-func _init(input_stream: ByteReaderStream, number_of_colors: int):
+func _init(input_stream: ByteReaderStream, number_of_colors: int) -> void:
     if number_of_colors < 0 or number_of_colors > 256:
         _error = Error.ERR_FILE_CORRUPT
         return

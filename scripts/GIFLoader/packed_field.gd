@@ -4,7 +4,7 @@ class_name PackedField
 
 var _bits: Array[bool] = []
 
-func _init(data: int):
+func _init(data: int) -> void:
     for i in 8:
         var bit_shift := 7 - i
         var bit_value := (data >> bit_shift) & 1
@@ -28,7 +28,7 @@ func get_bits(index: int, length: int) -> int:
     var bit_shift := length - 1
 
     for i in range(index, index + length):
-        var bit_value = int(_bits[i]) << bit_shift
+        var bit_value := int(_bits[i]) << bit_shift
         result += bit_value
         bit_shift -= 1
 

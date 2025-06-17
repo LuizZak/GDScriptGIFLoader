@@ -25,7 +25,7 @@ var _delay_time: int
 var _transparent_color_index: int
 var _error: Error
 
-func _init(input_stream: ByteReaderStream):
+func _init(input_stream: ByteReaderStream) -> void:
     _block_size = input_stream.read_byte()
 
     var packed := PackedField.new(input_stream.read_byte())
@@ -55,7 +55,6 @@ func block_size() -> int:
 func disposal_method() -> DisposalMethod:
     return _disposal_method
 
-## <summary>
 ## Indicates whether or not user input is expected before continuing.
 ## If the flag is set, processing will continue when user input is
 ## entered.
@@ -68,7 +67,6 @@ func disposal_method() -> DisposalMethod:
 ## When a Delay Time is used and the User Input Flag is set,
 ## processing will continue when user input is received or when the
 ## delay time expires, whichever occurs first.
-## </summary>
 func expects_user_input() -> bool:
     return _expects_user_input
 

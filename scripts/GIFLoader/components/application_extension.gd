@@ -11,8 +11,8 @@ var _application_authentication_code: String
 var _application_data: Array[DataBlock]
 var _error: Error
 
-func _init(input_stream: ByteReaderStream):
-    var identification_block = DataBlock.new(input_stream)
+func _init(input_stream: ByteReaderStream) -> void:
+    var identification_block := DataBlock.new(input_stream)
     var application_data: Array[DataBlock] = []
 
     if not input_stream.is_eof():
@@ -32,14 +32,14 @@ func _init(input_stream: ByteReaderStream):
 func get_error() -> Error:
     return _error
 
-func _save_data(identification_block: DataBlock, application_data: Array[DataBlock]):
+func _save_data(identification_block: DataBlock, application_data: Array[DataBlock]) -> void:
     _identification_block = identification_block
 
     if _identification_block.get_declared_block_size() != 11:
         _error = Error.ERR_FILE_CORRUPT
         return
 
-    var stream = _identification_block.get_data_as_byte_reader_stream()
+    var stream := _identification_block.get_data_as_byte_reader_stream()
 
     _application_identifier = stream.read_ascii(8)
     _application_authentication_code = stream.read_ascii(3)

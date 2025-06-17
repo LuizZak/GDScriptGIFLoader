@@ -22,7 +22,7 @@ var _background_color_index: int
 var _pixel_aspect_ratio: int
 var _error: Error
 
-func _init(input_stream: ByteReaderStream):
+func _init(input_stream: ByteReaderStream) -> void:
     if input_stream.remaining_bytes < 7:
         _error = Error.ERR_FILE_CORRUPT
         return

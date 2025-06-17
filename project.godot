@@ -14,3 +14,8 @@ config/name="GIFLoader"
 run/main_scene="uid://dr06pyksdqo64"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[debug]
+
+gdscript/warnings/untyped_declaration=1
+gdscript/warnings/unsafe_call_argument=1

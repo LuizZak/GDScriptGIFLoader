@@ -7,7 +7,7 @@ extends ApplicationExtension
 
 var _loop_count: int
 
-func _save_data(identification_block: DataBlock, application_data: Array[DataBlock]):
+func _save_data(identification_block: DataBlock, application_data: Array[DataBlock]) -> void:
     super._save_data(identification_block, application_data)
 
     for block in application_data:
@@ -16,7 +16,7 @@ func _save_data(identification_block: DataBlock, application_data: Array[DataBlo
 
         # The first byte in a Netscape application extension data block should
         # be 1. Ignore if anything else.
-        var reader = block.get_data_as_byte_reader_stream()
+        var reader := block.get_data_as_byte_reader_stream()
         if block.get_actual_block_size() > 2 && reader.read_byte() == 1:
             _loop_count = reader.read_short()
 
