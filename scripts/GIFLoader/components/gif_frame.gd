@@ -5,7 +5,6 @@ var _index: int
 var _image: Image
 var _delay: int
 var _expects_user_input: bool
-var _position: Vector2i
 var _local_color_table: ColorTable
 var _extension: GraphicControlExtension
 var _image_descriptor: ImageDescriptor
@@ -214,8 +213,6 @@ func _get_base_image(
             act = previous_frame._local_color_table
         else:
             act = previous_frame._global_color_table
-
-    base_image = Image.create_empty(width, height, false, Image.FORMAT_RGBA8)
 
     if previous_frame == null or previous_frame._image == null:
         base_image = Image.create_empty(width, height, false, Image.FORMAT_RGBA8)

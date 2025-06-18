@@ -31,7 +31,7 @@ func _init(input_stream: ByteReaderStream, pixel_count: int) -> void:
     var index_in_data_block := 0
     var pixel_index := 0
 
-    ## Number oof bytes still to be extracted from the current data block
+    ## Number of bytes still to be extracted from the current data block
     var bytes_to_extract := 0
 
     var prefix := PackedInt32Array()

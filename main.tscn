@@ -49,6 +49,18 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "0.0s"
 
+[node name="HBoxContainer2" type="HBoxContainer" parent="HSplitContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HSplitContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Frame count: "
+
+[node name="FrameCountLabel" type="Label" parent="HSplitContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "0"
+
 [node name="PanelContainer2" type="PanelContainer" parent="HSplitContainer"]
 layout_mode = 2
 

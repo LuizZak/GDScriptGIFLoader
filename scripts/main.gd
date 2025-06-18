@@ -4,6 +4,8 @@ extends Control
 @onready
 var time_to_load_label: Label = %TimeToLoadLabel
 @onready
+var frame_count_label: Label = %FrameCountLabel
+@onready
 var animated_sprite: AnimatedSprite2D = %AnimatedSprite
 @onready
 var file_path_label: Label = %FilePathLabel
@@ -51,6 +53,7 @@ func _update(result: GifLoadResult) -> void:
 
     var elapsed := result.total_time
     time_to_load_label.text = "%.2fs" % (elapsed / 1000.0)
+    frame_count_label.text = "%d" % result.sprite_frames.get_frame_count(&"default")
 
 func _load_gif(buffer: PackedByteArray) -> GifLoadResult:
     var start_time := Time.get_ticks_msec()

@@ -79,6 +79,10 @@ func get_sprite_frames() -> SpriteFrames:
         var texture := ImageTexture.create_from_image(frame.get_image())
         sprite_frames.add_frame(&"default", texture, float(frame.get_delay()) / average_delay)
 
+    if _netscape_extension != null:
+        if _netscape_extension.loop_count() == -1:
+            sprite_frames.set_animation_loop(&"default", false)
+
     return sprite_frames
 
 func _read_contents(input_stream: ByteReaderStream) -> void:
@@ -149,7 +153,7 @@ func _add_frame(input_stream: ByteReaderStream, last_gce: GraphicControlExtensio
     if (
         last_gce == null ||
         last_gce.disposal_method() == GraphicControlExtension.DisposalMethod.DO_NOT_DISPOSE ||
-        last_gce.disposal_method() == GraphicControlExtension.DisposalMethod.DO_NOT_DISPOSE
+        last_gce.disposal_method() == GraphicControlExtension.DisposalMethod.NOT_SPECIFIED
         ):
         _last_no_disposal_frame = frame
 
