@@ -157,7 +157,7 @@ func _create_image(
 
         var sx := i * image_width # Start of line in source
 
-        dx *= 4
+        dx *= 4 # 4 bytes per color: ABGR
         dlim *= 4
 
         while dx < dlim:
@@ -169,11 +169,7 @@ func _create_image(
             if not has_transparent or index_in_color_table != transparent_color:
                 if index_in_color_table < num_colors:
                     var color := colors[index_in_color_table]
-
-                    raw_image_data[dx] = (color >> 24) & 0xFF
-                    raw_image_data[dx + 1] = (color >> 16) & 0xFF
-                    raw_image_data[dx + 2] = (color >> 8) & 0xFF
-                    raw_image_data[dx + 3] = color & 0xFF
+                    raw_image_data.encode_u32(dx, color)
 
             dx += 4
 

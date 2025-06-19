@@ -31,7 +31,8 @@ func _init(input_stream: ByteReaderStream, number_of_colors: int) -> void:
         var b := buffer.decode_u8(j) & 0xFF
         j += 1
 
-        _int_colors[i] = (r << 24) | (g << 16) | (b << 8) | 255
+        #_int_colors[i] = (r << 24) | (g << 16) | (b << 8) | 255
+        _int_colors[i] = (r) | (g << 8) | (b << 16) | (255 << 24)
         i += 1
 
 ## Gets any error found during initialization.
@@ -43,13 +44,20 @@ func get_error() -> Error:
 func get_color_table() -> PackedInt32Array:
     return _int_colors
 
-## Gets the color at a specified index in this color table as a ARGB integer.
+## Gets the color at a specified index in this color table as a ABGR integer.
 func get_color_int(index: int) -> int:
     return _int_colors[index]
 
 ## Gets the color at a specified index in this color table.
 func get_color(index: int) -> Color:
-    return Color.hex(get_color_int(index))
+    var color = get_color_int(index)
+
+    var flipped_color = (color >> 24) & 0xFF
+    flipped_color |= ((color >> 16) & 0xFF) << 8
+    flipped_color |= ((color >> 8) & 0xFF) << 16
+    flipped_color |= ((color) & 0xFF) << 24
+
+    return Color.hex(color)
 
 ## Gets the length of this color table.
 func get_length() -> int:
